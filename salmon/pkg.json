@@ -1,24 +1,24 @@
 {
     "name": "salmon",
     "version": "0.1.0",
-    "description": "RNA seq expression counting tools",
-    "main": "main.nf",
+    "description": "expression counting tool",
+    "main": "salmon.nf",
     "deprecated": false,
     "keywords": [
-        "'rna-seq'",
-        "'bioinformatics'",
-        "'expression-counting'"
+        "rna-seq",
+        "bioinformatics",
+        "expression-counting"
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/icgc-argo-workflows/expression-counting.git"
+        "url": "https://github.com/icgc-argo-rna-workflows/expression-counting.git"
     },
     "container": {
         "registries": [
             {
                 "registry": "ghcr.io",
                 "type": "docker",
-                "org": "icgc-argo-workflows",
+                "org": "icgc-argo-rna-workflows",
                 "default": true
             }
         ]
@@ -32,6 +32,6 @@
         }
     ],
     "license": "MIT",
-    "bugReport": "https://github.com/icgc-argo-workflows/expression-counting/issues",
-    "homepage": "https://github.com/icgc-argo-workflows/expression-counting#readme"
+    "bugReport": "https://github.com/icgc-argo-rna-workflows/expression-counting/issues",
+    "homepage": "https://github.com/icgc-argo-rna-workflows/expression-counting#readme"
 }
