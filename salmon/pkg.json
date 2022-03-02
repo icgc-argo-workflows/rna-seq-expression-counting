@@ -11,14 +11,14 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/icgc-argo-rna-workflows/expression-counting.git"
+        "url": "https://github.com/icgc-argo-workflows/expression-counting.git"
     },
     "container": {
         "registries": [
             {
                 "registry": "ghcr.io",
                 "type": "docker",
-                "org": "icgc-argo-rna-workflows",
+                "org": "icgc-argo-workflows",
                 "default": true
             }
         ]
@@ -32,6 +32,6 @@
         }
     ],
     "license": "MIT",
-    "bugReport": "https://github.com/icgc-argo-rna-workflows/expression-counting/issues",
-    "homepage": "https://github.com/icgc-argo-rna-workflows/expression-counting#readme"
+    "bugReport": "https://github.com/icgc-argo-workflows/expression-counting/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/expression-counting#readme"
 }

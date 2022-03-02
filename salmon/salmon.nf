@@ -104,7 +104,7 @@ process norm{
   script:
 
     """
-    python ${baseDir}/normalize.py $readCounts "${readCounts}.norm"
+    python3 ${baseDir}/normalize.py $readCounts "${readCounts}.norm"
     """
 }
 

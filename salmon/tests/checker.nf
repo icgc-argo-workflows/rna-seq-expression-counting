@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 /*
-  Copyright (c) 2022, icgc-argo-workflows
+  Copyright (c) 2021, icgc-argo-rna-wg
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.salmon'
+    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/expression-counting.salmon'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -48,10 +48,13 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.expected_output = ""
+params.input_file = "tests/*_{1,2}.fastq.gz"
+params.index = "salmon_index"
+params.referenceSeq = "*.transcripts.fa"
+params.annotation = "*.annotation.gtf"
+params.expected_output = "tests/expected/*.salmon.out"
 
-include { salmon } from '../main'
+include { salmon; norm } from '../salmon' params(['cleanup': false, *:params]) 
 
 
 process file_smart_diff {
@@ -89,11 +92,15 @@ workflow checker {
 
   main:
     salmon(
-      input_file
+      Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"},
+      params.index,
+      params.referenceSeq     
     )
-
+    norm(
+      salmon.out
+    ) 
     file_smart_diff(
-      salmon.out.output_file,
+      norm.out.output_file,
       expected_output
     )
 }
