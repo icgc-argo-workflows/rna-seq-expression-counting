@@ -1,6 +1,6 @@
 FROM combinelab/salmon
 
-LABEL org.opencontainers.image.source https://github.com/icgc-argo-rna-wg/expression-counting
+LABEL org.opencontainers.image.source https://github.com/icgc-argo-rna-workflows/expression-counting
 
 ENV TZ=Asia/Seoul
 
