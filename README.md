@@ -4,4 +4,4 @@ StringTie (alignment-based)
 
 Salmon (Quasi-alignment) 
 
-HTseq (Read counting)
+featureCounts (Read counting)
