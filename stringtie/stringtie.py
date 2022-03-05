@@ -29,8 +29,15 @@
 import os
 import sys
 import argparse
+import pandas as pd
 import subprocess
 
+def stringtie(bam, annotation, output_pattern):
+    cmd = ['stringtie',bam,'-e','-G',annotation,'-o',"{}.stringtie.gtf".format(output_pattern),'-A',"{}.stringtie".format(output_pattern)]
+    try:
+        subprocess.run(' '.join(cmd), check=True, shell=True)
+    except Exception as e:
+        sys.exit("Error: %s. stringtie failed: \n" %(e))
 
 def main():
     """
@@ -40,20 +47,17 @@ def main():
     """
 
     parser = argparse.ArgumentParser(description='Tool: stringtie')
-    parser.add_argument('-i', '--input-file', dest='input_file', type=str,
-                        help='Input file', required=True)
-    parser.add_argument('-o', '--output-dir', dest='output_dir', type=str,
-                        help='Output directory', required=True)
+    parser.add_argument('-a','--annotation', dest='annotation', type=str, help='annotation file in gtf format')
+    parser.add_argument('-bam', type=str, help='input bam file')
+    parser.add_argument('-o','--output_pattern', dest='output_pattern', type=str)
+    #parser.add_argument('-i', '--input-file', dest='input_file', type=str, help='Input file', required=True) 
+    #parser.add_argument('-o', '--output-dir', dest='output_dir', type=str, help='Output directory', required=True)
     args = parser.parse_args()
 
-    if not os.path.isfile(args.input_file):
-        sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.input_file)
+    if not os.path.isfile(args.bam):
+        sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.bam)
 
-    if not os.path.isdir(args.output_dir):
-        sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
-
-    subprocess.run(f"fastqc -o {args.output_dir} {args.input_file}", shell=True, check=True)
-
+    stringtie(args.bam, args.annotation, args.output_pattern)
 
 if __name__ == "__main__":
     main()
