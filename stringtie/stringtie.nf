@@ -95,7 +95,7 @@ process stringtie_rc{
         script:
         """
         echo $id $stringtie_out_gtf > prepDE_inp.${id}.txt
-        python $baseDir/prepDE.py -i prepDE_inp.${id}.txt -g ${id}.gene.readCounts -t ${id}.transcripts.readCounts
+        python3 $baseDir/prepDE.py -i prepDE_inp.${id}.txt -g ${id}.gene.readCounts -t ${id}.transcripts.readCounts
         """
 }
 
