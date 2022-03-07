@@ -32,7 +32,7 @@ import argparse
 import subprocess
 
 def htseq(bam, annotation, output_pattern):
-    cmd = ['htseq-count','-f','bam','-q','--stranded=no',bam,annotation,'>',"{}.htseq.tmp"]
+    cmd = ['htseq-count','-f','bam','-q','--stranded=no',bam,annotation,'>',"{}.htseq.tmp".format(output_pattern)]
     try:
         subprocess.run(' '.join(cmd), check=True, shell=True)
     except Exception as e:
