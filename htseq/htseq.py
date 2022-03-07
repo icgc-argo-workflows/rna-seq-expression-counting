@@ -31,7 +31,12 @@ import sys
 import argparse
 import subprocess
 
-
+def htseq(bam, annotation, output_pattern):
+    cmd = ['htseq-count','-f','bam','-q','--stranded=no',bam,annotation,'>',"{}.htseq.tmp"]
+    try:
+        subprocess.run(' '.join(cmd), check=True, shell=True)
+    except Exception as e:
+        sys.exit("Error: %s. htseq failed: " %(e))
 def main():
     """
     Python implementation of tool: htseq
@@ -40,20 +45,22 @@ def main():
     """
 
     parser = argparse.ArgumentParser(description='Tool: htseq')
-    parser.add_argument('-i', '--input-file', dest='input_file', type=str,
-                        help='Input file', required=True)
-    parser.add_argument('-o', '--output-dir', dest='output_dir', type=str,
-                        help='Output directory', required=True)
+    #parser.add_argument('-i', '--input-file', dest='input_file', type=str,
+    #                    help='Input file', required=True)
+    #parser.add_argument('-o', '--output-dir', dest='output_dir', type=str,
+    #                    help='Output directory', required=True)
+    parser.add_argument('-a','--annotation', dest='annotation', type=str, help='annotation file in gtf format')
+    parser.add_argument('-bam', type=str, help='input bam file')
+    parser.add_argument('-o','--output_pattern', dest='output_pattern', type=str)
     args = parser.parse_args()
 
     if not os.path.isfile(args.input_file):
         sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.input_file)
 
-    if not os.path.isdir(args.output_dir):
-        sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
+    #if not os.path.isdir(args.output_dir):
+    #    sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
 
-    subprocess.run(f"fastqc -o {args.output_dir} {args.input_file}", shell=True, check=True)
-
+    htseq(args.bam, args.annotation, args.output_pattern)
 
 if __name__ == "__main__":
     main()
