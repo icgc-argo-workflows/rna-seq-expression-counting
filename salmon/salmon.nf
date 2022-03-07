@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'icgc_test'
+    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/expression-counting.salmon'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -40,7 +40,7 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
-params.container_version = "latest"
+params.container_version = ""
 params.container = ""
 
 params.cpus = 5
