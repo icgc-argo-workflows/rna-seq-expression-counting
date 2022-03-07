@@ -54,8 +54,8 @@ def main():
     parser.add_argument('-o','--output_pattern', dest='output_pattern', type=str)
     args = parser.parse_args()
 
-    if not os.path.isfile(args.input_file):
-        sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.input_file)
+    if not os.path.isfile(args.bam):
+        sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.bam)
 
     #if not os.path.isdir(args.output_dir):
     #    sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
