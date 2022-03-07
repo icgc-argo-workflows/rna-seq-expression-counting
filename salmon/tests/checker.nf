@@ -100,7 +100,7 @@ workflow checker {
       salmon.out
     ) 
     file_smart_diff(
-      norm.out.output_file,
+      norm.out,
       expected_output
     )
 }
