@@ -8,9 +8,10 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y tzdata build-essential wget python3.7 python3-pip tar cmake
 
-RUN pip3 install HTseq &&\
-    pandas && \
-    pip3 install argparse
+RUN apt-get install -y build-essential python-numpy python-matplotlib python-pysam python-htseq
+
+RUN pip3 install pandas 
+RUN pip3 install argparse
 
 
 ENV PATH="/tools:${PATH}"
