@@ -4,4 +4,4 @@ This repository contains the packages for RNA-Seq expression-counting / normaliz
     - stringtie (alignment based)
     - salmon (quasi-alignment based)
 - (Simple) read count based tool
-    - featurecounts
+    - featurecounts / HTseq
