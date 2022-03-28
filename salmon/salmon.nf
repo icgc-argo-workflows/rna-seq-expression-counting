@@ -49,9 +49,9 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/*_{1,2}.fastq.gz"
-params.referenceSeq = "${baseDir}/gencode.v37.transcripts.fa"
-params.annotation = "${baseDir}/gencode.v37.annotation.gtf"
+params.input_file = "${baseDir}/tests/input/*_{1,2}.fastq.gz"
+params.referenceSeq = "${baseDir}/input/gencode.v37.transcripts.fa"
+params.annotation = "${baseDir}/input/*.gtf"
 params.outdir = "${baseDir}/tests/expected/"
 //params.output_pattern = "*"  // output file name pattern
 
