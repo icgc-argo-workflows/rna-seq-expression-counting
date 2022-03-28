@@ -91,7 +91,7 @@ workflow checker {
 
   main:
     htseq(
-      input_file
+      input_file,
       annotation_file
     )
 
