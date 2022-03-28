@@ -45,13 +45,13 @@ params.container = ""
 
 params.cpus = 1
 params.mem = 1  // GB
-params.publish_dir = ""  // set to empty string will disable publishDir
+params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/*.bam"
-params.annotation = "${baseDir}/gencode.v37.annotation.gtf"
-params.outdir = "${baseDir}/tests/expected/"
+params.input_file = "${baseDir}/tests/input/*.bam"
+params.annotation = "${baseDir}/input/*.gtf"
+//params.outdir = ""
 //params.output_pattern = "*"  // output file name pattern
 
 inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
