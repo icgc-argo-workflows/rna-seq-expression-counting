@@ -48,8 +48,9 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "tests/input/*.bam"
-params.expected_output = "tests/expected/htseq/*.htseq.raw"
+params.input_file = ""
+params.annotation_file=""
+params.expected_output = ""
 
 include { htseq } from '../main'
 
@@ -85,11 +86,13 @@ process file_smart_diff {
 workflow checker {
   take:
     input_file
+    annotation_file
     expected_output
 
   main:
     htseq(
       input_file
+      annotation_file
     )
 
     file_smart_diff(

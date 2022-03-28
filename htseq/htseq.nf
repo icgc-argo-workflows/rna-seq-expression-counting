@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.htseq'
+    'ghcr.io': 'htseq'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -40,7 +40,7 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
-params.container_version = ""
+params.container_version = "latest"
 params.container = ""
 
 params.cpus = 1
@@ -50,9 +50,9 @@ params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will d
 
 // tool specific parmas go here, add / change as needed
 params.input_file = "${baseDir}/tests/input/*.bam"
-params.annotation = "${baseDir}/input/*.gtf"
+params.annotation = "${baseDir}/tests/input/*.gtf"
 //params.outdir = ""
-//params.output_pattern = "*"  // output file name pattern
+//params.output_pattern = ""  // output file name pattern
 
 inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
 
