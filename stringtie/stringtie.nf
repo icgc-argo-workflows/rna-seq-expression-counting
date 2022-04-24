@@ -116,7 +116,7 @@ process stringtie_out_parsing{
         subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas"]) 
 
         import pandas as pd
-        
+
         df_rc_raw = pd.read_csv("${gene_readCounts}",header=0,names=['gene','readCounts'])
         df_rc_raw['gene_ensembl'] = df_rc_raw['gene'].apply(lambda x:x.split('|')[0])
         df_rc_raw['gene_symbol'] = df_rc_raw['gene'].apply(lambda x:x.split('|')[1])
