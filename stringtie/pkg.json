@@ -2,7 +2,7 @@
     "name": "stringtie",
     "version": "0.1.0",
     "description": "alignment-based expression counting tool:stringtie",
-    "main": "main.nf",
+    "main": "stringtie.nf",
     "deprecated": false,
     "keywords": [
         "bioinformatics",

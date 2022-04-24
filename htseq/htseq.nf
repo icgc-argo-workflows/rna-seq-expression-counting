@@ -43,8 +43,8 @@ params.container_registry = ""
 params.container_version = "latest"
 params.container = ""
 
-params.cpus = 1
-params.mem = 1  // GB
+params.cpus = 10
+params.mem = 10  // GB
 params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
 
 

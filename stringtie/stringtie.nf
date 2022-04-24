@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'stringtie'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.stringtie'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -40,7 +40,7 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
-params.container_version = "latest"
+params.container_version = ""
 params.container = ""
 
 params.cpus = 1
@@ -49,8 +49,8 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/*.bam"
-params.annotation = "${baseDir}/gencode.v37.annotation.gtf"
+params.input_file = "${baseDir}/tests/input/*.bam"
+params.annotation = "${baseDir}/tests/input/*.gtf"
 params.outdir = "${baseDir}/tests/expected/"
 //params.output_pattern = "*"  // output file name pattern
 
@@ -95,7 +95,7 @@ process stringtie_rc{
         script:
         """
         echo $id $stringtie_out_gtf > prepDE_inp.${id}.txt
-        python $baseDir/prepDE.py -i prepDE_inp.${id}.txt -g ${id}.gene.readCounts -t ${id}.transcripts.readCounts
+        python3 $baseDir/prepDE.py -i prepDE_inp.${id}.txt -g ${id}.gene.readCounts -t ${id}.transcripts.readCounts
         """
 }
 
@@ -109,9 +109,12 @@ process stringtie_out_parsing{
         publishDir "${params.outdir}"
         file("${id}.stringtie.out")
 
-        shell:
         """
-        #!/usr/bin/env python
+        #!/usr/bin/env python2
+        import sys
+        import subprocess
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas"]) 
+
         import pandas as pd
 
         df_rc_raw = pd.read_csv("${gene_readCounts}",header=0,names=['gene','readCounts'])
