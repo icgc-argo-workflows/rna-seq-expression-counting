@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 /*
-  Copyright (c) 2021, icgc-argo-rna-wg
+  Copyright (c) 2022, icgc-argo-workflows
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-rna-wg/expression-counting.salmon'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.htseq'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -48,13 +48,10 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "tests/*_{1,2}.fastq.gz"
-params.index = "salmon_index"
-params.referenceSeq = "*.transcripts.fa"
-params.annotation = "*.annotation.gtf"
-params.expected_output = "tests/expected/*.salmon.out"
+params.input_file = ""
+params.expected_output = ""
 
-include { salmon; norm } from '../salmon' params(['cleanup': false, *:params]) 
+include { htseq } from '../main'
 
 
 process file_smart_diff {
@@ -73,13 +70,13 @@ process file_smart_diff {
     # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
     # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
 
-    #cat ${output_file[0]} \
-    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
+    cat ${output_file[0]} \
+      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
 
-    #([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
+    ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
+      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
 
-    diff output_file expected_file \
+    diff normalized_output normalized_expected \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -91,16 +88,12 @@ workflow checker {
     expected_output
 
   main:
-    salmon(
-      Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"},
-      params.index,
-      params.referenceSeq     
+    htseq(
+      input_file
     )
-    norm(
-      salmon.out
-    ) 
+
     file_smart_diff(
-      norm.out,
+      htseq.out.output_file,
       expected_output
     )
 }
