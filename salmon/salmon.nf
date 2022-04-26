@@ -45,14 +45,14 @@ params.container = ""
 
 params.cpus = 5
 params.mem = 8 // GB
-params.publish_dir = ""  // set to empty string will disable publishDir
+params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
 params.input_file = "${baseDir}/tests/input/*_{1,2}.test.fastq.gz"
 params.referenceSeq = "${baseDir}/tests/input/*.transcripts.fa"
 params.annotation = "${baseDir}/tests/input/*.gtf"
-params.outdir = "${baseDir}/tests/expected/"
+//params.outdir = "${baseDir}/tests/expected/"
 //params.output_pattern = "*"  // output file name pattern
 
 
@@ -71,7 +71,7 @@ process salmon {
     path annotation 
 
   output: 
-    publishDir "${params.outdir}"
+    publishDir 
     file("${id}.salmon")
 
   script:
