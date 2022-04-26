@@ -50,8 +50,8 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 // tool specific parmas go here, add / change as needed
 params.input_file = "${baseDir}/tests/input/*_{1,2}.test.fastq.gz"
-params.referenceSeq = "${baseDir}/input/*.transcripts.fa"
-params.annotation = "${baseDir}/input/*.gtf"
+params.referenceSeq = "${baseDir}/tests/input/*.transcripts.fa"
+params.annotation = "${baseDir}/tests/input/*.gtf"
 params.outdir = "${baseDir}/tests/expected/"
 //params.output_pattern = "*"  // output file name pattern
 
@@ -65,13 +65,14 @@ process salmon {
   cpus params.cpus
   memory "${params.mem} GB"
 
-  input:  // input, make update as needed
+  input:  
     tuple val(id), path(reads)
     path refSeq 
     path annotation 
 
-  output:  // output, make update as needed
-    path "out_dir/${id}.salmon", emit: output_file
+  output: 
+    publishDir "${params.outdir}"
+    file("${id}.salmon")
 
   script:
     // add and initialize variables here as needed
@@ -89,34 +90,12 @@ process salmon {
    awk 'FS=OFS="\t" {if (\$1!~/#/) print \$9}' $annotation |grep "gene_id"|grep "transcript_id"|awk -F" |; " -vOFS="\t" '{print \$4, \$2}'\
       > "${annotation}.tx2gene"
     
-   Rscript ${baseDir}/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "out_dir/${id}.salmon" 
+   Rscript ${baseDir}/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.salmon" 
    """
-}
-
-process norm{
-  input:
-    file readCounts
-
-  output:
-    publishDir "${params.outdir}"
-    file "${readCounts}.norm"
-
-  script:
-
-    """
-    python3 ${baseDir}/normalize.py $readCounts "${readCounts}.norm"
-    """
 }
 
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  salmon(
-    inp_ch,
-    params.referenceSeq,
-    params.annotation
-  )
-  norm(
-   salmon.out
-  )
+  salmon(inp_ch,params.referenceSeq, params.annotation)
 }
