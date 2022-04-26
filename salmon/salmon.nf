@@ -53,6 +53,7 @@ params.input_file = "${baseDir}/tests/input/*_{1,2}.test.fastq.gz"
 params.referenceSeq = "${baseDir}/tests/input/*.transcripts.fa"
 params.annotation = "${baseDir}/tests/input/*.gtf"
 //params.outdir = "${baseDir}/tests/expected/"
+>>>>>>> 180451cbebefe386a355e22acac66c31cb4088ca
 //params.output_pattern = "*"  // output file name pattern
 
 
