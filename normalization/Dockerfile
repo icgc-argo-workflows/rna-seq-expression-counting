@@ -1,11 +1,17 @@
-FROM pegi3s/fastqc:0.11.9
+FROM ubuntu:18.04
 
 LABEL org.opencontainers.image.source https://github.com/icgc-argo-workflows/expression-counting
 
-RUN apt-get update && apt-get install -y python3-pip
+ENV TZ=Asia/Seoul
+ENV DEBCONF_NOWARNINGS yes
+ARG DEBIAN_FRONTEND=noninteractive
 
-RUN pip3 install pandas && \
-    pip3 install argparse
+RUN mkdir tools
+
+RUN apt-get update && apt-get install -y tzdata build-essential wget python2.7 python-pip python3.7 python3-pip tar cmake
+RUN pip install pandas
+RUN pip3 install pandas
+RUN pip3 install argparse
 
 
 ENV PATH="/tools:${PATH}"

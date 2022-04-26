@@ -51,7 +51,7 @@ params.container = ""
 params.input_file = ""
 params.expected_output = ""
 
-include { normalization } from '../main'
+include { normalization } from '../normalize'
 
 
 process file_smart_diff {
