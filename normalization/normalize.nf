@@ -49,8 +49,10 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.input_file = "${baseDir}/tests/input/*.readCounts"
+params.geneLength = "${baseDir}/gene_length_exon_isoform"
+params.outdir = "${baseDir}/tests/expected/"
+// params.output_pattern = "*"  // output file name pattern
 
 
 process normalization {
@@ -62,19 +64,20 @@ process normalization {
 
   input:  // input, make update as needed
     path input_file
+    path geneLength
 
   output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+    publishDir "${params.outdir}"
+    file "${input_file}.norm.${params.output_pattern}"
 
   script:
     // add and initialize variables here as needed
 
     """
-    mkdir -p output_dir
-
-    main.py \
+    python3 ${baseDir}/normalize.py \
       -i ${input_file} \
-      -o output_dir
+      -geneLength ${geneLength} \
+      -o "${input_file}.norm.${params.output_pattern}"
 
     """
 }
@@ -84,6 +87,7 @@ process normalization {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   normalization(
-    file(params.input_file)
+    file(params.input_file),
+    file(params.geneLength)
   )
 }
