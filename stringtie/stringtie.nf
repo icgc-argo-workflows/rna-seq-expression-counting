@@ -32,7 +32,11 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
+<<<<<<< HEAD
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.stringtie'
+=======
+    'ghcr.io': 'stringtie'
+>>>>>>> bf86503fcf918cc7607314d6312f37048fa55f26
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -40,7 +44,11 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
+<<<<<<< HEAD
 params.container_version = ""
+=======
+params.container_version = "latest"
+>>>>>>> bf86503fcf918cc7607314d6312f37048fa55f26
 params.container = ""
 
 params.cpus = 1
