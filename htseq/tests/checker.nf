@@ -52,7 +52,7 @@ params.input_file = ""
 params.annotation_file=""
 params.expected_output = ""
 
-include { htseq } from '../main'
+include { htseq } from '../htseq'
 
 
 process file_smart_diff {
