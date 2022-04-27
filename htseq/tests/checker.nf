@@ -49,6 +49,7 @@ params.container = ""
 
 // tool specific parmas go here, add / change as needed
 params.input_file = ""
+params.annotation_file=""
 params.expected_output = ""
 
 include { htseq } from '../main'
@@ -70,13 +71,13 @@ process file_smart_diff {
     # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
     # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
 
-    cat ${output_file[0]} \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
+    #cat ${output_file[0]} \
+    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
 
-    ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
+    #([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
+    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
 
-    diff normalized_output normalized_expected \
+    diff output_file expected_file \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -85,15 +86,17 @@ process file_smart_diff {
 workflow checker {
   take:
     input_file
+    annotation_file
     expected_output
 
   main:
     htseq(
-      input_file
+      input_file,
+      annotation_file
     )
 
     file_smart_diff(
-      htseq.out.output_file,
+      htseq.out,
       expected_output
     )
 }

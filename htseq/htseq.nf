@@ -52,7 +52,7 @@ params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will d
 params.input_file = "${baseDir}/tests/input/*.bam"
 params.annotation = "${baseDir}/tests/input/*.gtf"
 //params.outdir = ""
-//params.output_pattern = "*"  // output file name pattern
+//params.output_pattern = ""  // output file name pattern
 
 inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
 

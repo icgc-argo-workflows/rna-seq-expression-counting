@@ -2,7 +2,7 @@
     "name": "htseq",
     "version": "0.1.0",
     "description": "expression counting tool:htseq",
-    "main": "main.nf",
+    "main": "htseq.nf",
     "deprecated": false,
     "keywords": [
         "bioinformatics",
