@@ -53,7 +53,6 @@ params.input_file = "${baseDir}/tests/input/*_{1,2}.test.fastq.gz"
 params.referenceSeq = "${baseDir}/tests/input/*.transcripts.fa"
 params.annotation = "${baseDir}/tests/input/*.gtf"
 //params.outdir = "${baseDir}/tests/expected/"
->>>>>>> 180451cbebefe386a355e22acac66c31cb4088ca
 //params.output_pattern = "*"  // output file name pattern
 
 
@@ -72,8 +71,9 @@ process salmon {
     path annotation 
 
   output: 
-    publishDir 
-    file("${id}.salmon")
+    publishDir
+    file("${id}.transcripts.salmon")     
+    file("${id}.gene.salmon")
 
   script:
     // add and initialize variables here as needed
@@ -90,8 +90,10 @@ process salmon {
    
    awk 'FS=OFS="\t" {if (\$1!~/#/) print \$9}' $annotation |grep "gene_id"|grep "transcript_id"|awk -F" |; " -vOFS="\t" '{print \$4, \$2}'\
       > "${annotation}.tx2gene"
-    
-   Rscript ${baseDir}/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.salmon" 
+   
+   cp out_dir/quant.sf ./"${id}.transcripts.salmon"    
+  
+   Rscript ${baseDir}/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.gene.salmon" 
    """
 }
 
