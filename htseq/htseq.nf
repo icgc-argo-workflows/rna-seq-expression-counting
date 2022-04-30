@@ -52,9 +52,9 @@ params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will d
 params.input_file = "${baseDir}/tests/input/*.bam"
 params.annotation = "${baseDir}/tests/input/*.gtf"
 //params.outdir = ""
-//params.output_pattern = ""  // output file name pattern
+params.output_pattern = ""  // output file name pattern
 
-inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
+//inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
 
 
 process htseq {
@@ -65,12 +65,11 @@ process htseq {
   memory "${params.mem} GB"
 
   input:  // input, make update as needed
-    tuple val(id), path(bam)
-    path annotation
+    file bam
+    file annotation
 
   output:  // output, make update as needed
-    tuple val(id), path("${id}.htseq.raw")
-    //path "output_dir/${params.output_pattern}", emit: output_file
+    file("${params.output_pattern}.htseq.raw")
 
   script:
     // add and initialize variables here as needed
@@ -81,9 +80,9 @@ process htseq {
     python3 ${baseDir}/htseq.py \
       -a ${annotation} \
       -bam ${bam} \
-      -o ${id} 
+      -o ${params.output_pattern} 
 
-    head -n -5 "${id}.htseq.tmp" | tail -n +3 > "${id}.htseq.raw"            
+    head -n -5 "${params.output_pattern}.htseq.tmp" | tail -n +3 > "${params.output_pattern}.htseq.raw"            
     """
 }
 
@@ -91,5 +90,5 @@ process htseq {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  htseq(inp_bam_ch, params.annotation)
+  htseq(params.input_file, params.annotation)
 }

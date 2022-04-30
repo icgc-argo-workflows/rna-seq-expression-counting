@@ -1,9 +1,9 @@
 {
     "input_file": "input/sample_01.test.bam",
     "annotation_file":"input/test.gtf",
+    "expected_output":"expected/htseq/sample_01.test.htseq.raw",
     "container_registry": "ghcr.io",
     "publish_dir": "outdir",
     "cpus": 1,
-    "mem": 0.5,
-    "expected_output": "expected/htseq/sample_01.test.htseq.raw"
+    "mem": 0.5
 }

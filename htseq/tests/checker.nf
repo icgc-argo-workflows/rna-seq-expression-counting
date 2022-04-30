@@ -59,8 +59,8 @@ process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    path output_file
-    path expected_file
+    file output_file
+    file expected_file
 
   output:
     stdout()
@@ -104,7 +104,8 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
-    file(params.expected_output)
+    params.input_file,
+    params.annotation_file,
+    params.expected_output
   )
 }
