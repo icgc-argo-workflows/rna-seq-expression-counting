@@ -1,6 +1,8 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3.bam",
+    "input_file": "input/sample_01_{1,2}.fastq.gz",
+    "referenceSeq": "input/",
+    "annotation": "input/test.gtf" 
+    "expected_output": "expected/salmon/sample_01.gene.salmon",
     "publish_dir": "outdir",
     "cpus": 1,
     "mem": 0.5
