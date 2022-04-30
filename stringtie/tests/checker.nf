@@ -49,17 +49,21 @@ params.container = ""
 
 // tool specific parmas go here, add / change as needed
 params.input_file = ""
-params.expected_output = ""
+params.annotation = ""
+params.expected_output1 = ""
+params.expected_output2 = ""
 
-include { stringtie } from '../main'
+include { stringtie } from '../stringtie'
 
 
 process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    path output_file
-    path expected_file
+    path(output_file1)
+    path(output_file2)
+    path expected_file1
+    path expected_file2
 
   output:
     stdout()
@@ -70,14 +74,19 @@ process file_smart_diff {
     # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
     # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
 
-    cat ${output_file[0]} \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
+    # cat ${output_file[0]} \
+    #   | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
 
-    ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
+    # ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
+    #   | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
 
-    diff normalized_output normalized_expected \
-      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
+    # diff normalized_output normalized_expected \
+    #   && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
+    diff output_file1 expected_file1 \
+        && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of gene-level stringtie quantification mismatch." && exit 1 )
+
+    diff output_file2 expected_file2 \
+        && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of transcript-level stringtie quantification mismatch." && exit 1 )
     """
 }
 
@@ -85,16 +94,20 @@ process file_smart_diff {
 workflow checker {
   take:
     input_file
-    expected_output
+    annotation
+    expected_output1
+    expected_output2
 
   main:
     stringtie(
-      input_file
+      input_file,
+      annotation
     )
 
     file_smart_diff(
-      stringtie.out.output_file,
-      expected_output
+      stringtie.out,
+      expected_output1,
+      expected_output2
     )
 }
 
@@ -102,6 +115,8 @@ workflow checker {
 workflow {
   checker(
     file(params.input_file),
-    file(params.expected_output)
+    file(params.annotation),
+    file(params.expected_output1),
+    file(params.expected_output2)
   )
 }
