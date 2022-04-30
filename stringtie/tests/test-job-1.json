@@ -1,6 +1,8 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3_fastqc.out.gz",
+    "input_file": "input/sample_01.test.bam",
+    "annotation": "input/test.gtf",
+    "expected_output1": "expected/stringtie/sample_01.test.gene.readCounts",
+    "expected_output2": "expected/stringtie/sample_01.test.transcripts.readCounts",
     "publish_dir": "outdir",
     "cpus": 1,
     "mem": 0.5
