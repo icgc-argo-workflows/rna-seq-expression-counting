@@ -54,7 +54,7 @@ params.referenceSeq = "*.transcripts.fa"
 params.annotation = "*.annotation.gtf"
 params.expected_output = "tests/expected/*.salmon.out"
 
-include { salmon; norm } from '../salmon' params(['cleanup': false, *:params]) 
+include { salmon} from '../salmon' params(['cleanup': false, *:params]) 
 
 
 process file_smart_diff {
@@ -87,28 +87,30 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    input_file
-    expected_output
+    inp_ch 
+    path referenceSeq
+    path annotation
+    path expected_output
 
   main:
     salmon(
-      Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"},
-      params.index,
-      params.referenceSeq     
+      ${inp_ch},
+      ${referenceSeq},
+      ${annotation} 
     )
-    norm(
-      salmon.out
-    ) 
     file_smart_diff(
-      norm.out,
-      expected_output
+      salmon.out,
+      ${expected_output}
     )
 }
 
 
 workflow {
+  inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
   checker(
-    file(params.input_file),
-    file(params.expected_output)
+    inp_ch, 
+    params.referenceSeq,
+    params.annotation,
+    params.expected_output
   )
 }
