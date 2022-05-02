@@ -48,11 +48,11 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "tests/*_{1,2}.fastq.gz"
-params.index = "salmon_index"
-params.referenceSeq = "*.transcripts.fa"
-params.annotation = "*.annotation.gtf"
-params.expected_output = "tests/expected/*.salmon.out"
+params.input_file = ""
+//params.index = "salmon_index"
+//params.referenceSeq = ""
+params.annotation = ""
+params.expected_output = ""
 
 include { salmon} from '../salmon' params(['cleanup': false, *:params]) 
 
@@ -61,8 +61,9 @@ process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    path output_file
-    path expected_file
+    output_file
+    expected_file1
+    expected_file2 
 
   output:
     stdout()
@@ -79,38 +80,41 @@ process file_smart_diff {
     #([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
     #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
 
-    diff output_file expected_file \
+    diff ${output_file[0]} expected_file1 \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
-    """
+   
+   diff ${output_file[1]} expected_file2 \
+      && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 ) 
+   """
 }
 
 
 workflow checker {
   take:
     inp_ch 
-    path referenceSeq
     path annotation
-    path expected_output
+    path expected_output1
+    path expected_output2    
 
   main:
     salmon(
-      ${inp_ch},
-      ${referenceSeq},
-      ${annotation} 
+      inp_ch,
+      annotation 
     )
     file_smart_diff(
       salmon.out,
-      ${expected_output}
+      expected_output1,
+      expected_output2
     )
 }
 
 
 workflow {
-  inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
+  inp_ch = Channel.fromPath(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
   checker(
     inp_ch, 
-    params.referenceSeq,
     params.annotation,
-    params.expected_output
+    params.expected_output1,
+    params.expected_output2
   )
 }
