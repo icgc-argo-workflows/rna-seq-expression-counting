@@ -53,7 +53,7 @@ def main():
     """
 
     parser = argparse.ArgumentParser(description='Tool: salmon')
-    parser.add_argument('--referenceSeq')
+    #parser.add_argument('--referenceSeq')
     parser.add_argument('--index')
     parser.add_argument('--threads')
     parser.add_argument('-r1','--read1', dest='read1',type=str, help='Input file: read1', required=True)
@@ -73,7 +73,7 @@ def main():
 
     subprocess.run("mkdir -p {}".format(args.output_dir), check=True, shell=True)
     
-    salmon_index(args.referenceSeq, args.index)
+    #salmon_index(args.referenceSeq, args.index)
 
     salmon_quant(args.index, "A", args.read1, args.read2, args.output_dir)
 

@@ -18,10 +18,14 @@ RUN apt-get install -y r-base
 RUN Rscript -e "if (!require('BiocManager', quietly = TRUE)) install.packages('BiocManager');BiocManager::install('tximport')"
 RUN Rscript -e "install.packages('argparse')"
 
-
+RUN wget "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_37/gencode.v37.transcripts.fa.gz"
+RUN gunzip "gencode.v37.transcripts.fa.gz"
+RUN salmon index -t "gencode.v37.transcripts.fa" -i salmon_index  
+ 
 ENV PATH="/tools:${PATH}"
 
 COPY *.py /tools/
+COPY *.R /tools/
 
 ENTRYPOINT ["/usr/bin/env"]
 

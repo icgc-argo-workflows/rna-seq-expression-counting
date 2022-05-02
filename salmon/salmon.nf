@@ -43,20 +43,20 @@ params.container_registry = ""
 params.container_version = "latest"
 params.container = ""
 
-params.cpus = 5
-params.mem = 8 // GB
-params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
+params.cpus = ""
+params.mem = "" // GB
+params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/input/*_{1,2}.test.fastq.gz"
-params.referenceSeq = "${baseDir}/tests/input/*.transcripts.fa"
-params.annotation = "${baseDir}/tests/input/*.gtf"
-//params.outdir = "${baseDir}/tests/expected/"
-//params.output_pattern = "*"  // output file name pattern
+params.input_file = ""
+params.referenceSeq = ""
+params.annotation = ""
+//params.outdir = ""
+params.output_pattern = ""  // output file name pattern
 
 
-inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
+inp_ch = Channel.fromPath(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
 
 process salmon {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -66,39 +66,39 @@ process salmon {
   memory "${params.mem} GB"
 
   input:  
-    tuple val(id), path(reads)
-    path refSeq 
+    path reads
+    //path refSeq 
     path annotation 
 
   output: 
     publishDir
-    file("${id}.transcripts.salmon")     
-    file("${id}.gene.salmon")
+    tuple file("${params.output_pattern}.gene.salmon"),file("${params.output_pattern}.transcripts.salmon")
 
   script:
     // add and initialize variables here as needed
 
     """
-    python3 ${baseDir}/salmon.py \
-      --referenceSeq ${refSeq} \
+    python3 /tools/salmon.py \
+      ##--referenceSeq ${refSeq} \
       --index salmon_index \
       --threads ${params.cpus} \
       --read1 ${reads[0]} \
       --read2 ${reads[1]} \
       --output-dir out_dir \
-      --mem ${params.mem} > ${id}_expression_counting.log 2>&1
+      --mem ${params.mem} > ${params.output_pattern}_expression_counting.log 2>&1
    
    awk 'FS=OFS="\t" {if (\$1!~/#/) print \$9}' $annotation |grep "gene_id"|grep "transcript_id"|awk -F" |; " -vOFS="\t" '{print \$4, \$2}'\
       > "${annotation}.tx2gene"
    
-   cp out_dir/quant.sf ./"${id}.transcripts.salmon"    
+   cp out_dir/quant.sf ./"${params.output_pattern}.transcripts.salmon"    
   
-   Rscript ${baseDir}/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.gene.salmon" 
+   Rscript /tools/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.gene.salmon" 
    """
 }
 
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  salmon(inp_ch,params.referenceSeq, params.annotation)
+  //salmon(inp_ch, params.referenceSeq, params.annotation)
+  salmon(inp_ch, params.annotation)
 }
