@@ -45,12 +45,12 @@ params.container = ""
 
 params.cpus = 10
 params.mem = 10  // GB
-params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
+params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/input/*.bam"
-params.annotation = "${baseDir}/tests/input/*.gtf"
+params.input_file = ""
+params.annotation = ""
 //params.outdir = ""
 params.output_pattern = ""  // output file name pattern
 
@@ -77,7 +77,7 @@ process htseq {
     """
     mkdir -p out_dir
 
-    python3 ${baseDir}/htseq.py \
+    python3 /tools/htseq.py \
       -a ${annotation} \
       -bam ${bam} \
       -o ${params.output_pattern} 

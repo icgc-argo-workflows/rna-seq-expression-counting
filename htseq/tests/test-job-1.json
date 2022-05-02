@@ -3,7 +3,7 @@
     "annotation_file":"input/test.gtf",
     "expected_output":"expected/htseq/sample_01.test.htseq.raw",
     "container_registry": "ghcr.io",
-    "publish_dir": "outdir",
+    "output_pattern":"sample_01.test.checker",
     "cpus": 1,
     "mem": 0.5
 }
