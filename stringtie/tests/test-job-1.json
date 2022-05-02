@@ -3,8 +3,7 @@
     "annotation": "input/test.gtf",
     "expected_output1": "expected/stringtie/sample_01.test.gene.readCounts",
     "expected_output2": "expected/stringtie/sample_01.test.transcripts.readCounts",
-    "output_pattern": "sample_01.test",
-    "publish_dir": "outdir",
+    "output_pattern": "sample_01.test.checker",
     "cpus": 1,
     "mem": 0.5
 }

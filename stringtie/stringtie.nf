@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.stringtie'
+    'ghcr.io': 'stringtie'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -40,19 +40,19 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
-params.container_version = ""
+params.container_version = "latest"
 params.container = ""
 
 params.cpus = 1
 params.mem = 1  // GB
-params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
+params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/input/*.bam"
-params.annotation = "${baseDir}/tests/input/*.gtf"
-//params.outdir = "${baseDir}/tests/expected/"
-params.output_pattern = "sample_01.test"  // output file name pattern
+params.input_file = ""
+params.annotation = ""
+//params.outdir = ""
+params.output_pattern = ""  // output file name pattern
 
 //inp_bam_ch = Channel.fromPath(params.input_file).map{ file->tuple(file.baseName, file) }.ifEmpty{exit 1, "bam file not found: ${params.input_file}"}
 
@@ -69,21 +69,19 @@ process stringtie {
     path annotation
 
   output:  // output, make update as needed
-    file("${params.output_pattern}.gene.readCounts")
-    file("${params.output_pattern}.transcripts.readCounts")
-    //path "out_dir/${params.output_pattern}", emit: output_file
+    tuple path("${params.output_pattern}.gene.readCounts"),path("${params.output_pattern}.transcripts.readCounts")
 
   script:
     // add and initialize variables here as needed
     """
-    python3 ${baseDir}/stringtie.py \
+    python3 /tools/stringtie.py \
       -a ${annotation} \
       -bam ${input_file} \
       -o ${params.output_pattern} 
     
     echo "${params.output_pattern}" "${params.output_pattern}.stringtie.gtf" > "prepDE_inp.${params.output_pattern}.txt"
 
-    python3 ${baseDir}/prepDE.py -i "prepDE_inp.${params.output_pattern}.txt" -g "${params.output_pattern}.gene.readCounts" -t "${params.output_pattern}.transcripts.readCounts"
+    python3 /tools/prepDE.py -i "prepDE_inp.${params.output_pattern}.txt" -g "${params.output_pattern}.gene.readCounts" -t "${params.output_pattern}.transcripts.readCounts"
     """
 }
 

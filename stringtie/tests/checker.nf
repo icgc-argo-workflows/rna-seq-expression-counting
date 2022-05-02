@@ -53,39 +53,32 @@ params.annotation = ""
 params.expected_output1 = ""
 params.expected_output2 = ""
 
-include { stringtie } from '../stringtie'
+include { stringtie } from '../stringtie' params(['cleanup': false, *:params]) 
 
 
 process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    path(output_file1)
-    path(output_file2)
+    path output_file
     path expected_file1
-    path expected_file2
+    path expected_file2 
 
   output:
     stdout()
 
   script:
     """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    # cat ${output_file[0]} \
-    #   | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
-
-    # ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-    #   | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
-
-    # diff normalized_output normalized_expected \
-    #   && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
-    diff output_file1 expected_file1 \
+    sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${output_file[0]} > ${output_file[0]}".diff" 
+    sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${expected_file1}> ${expected_file1}".diff"
+    
+    sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${output_file[1]} > ${output_file[1]}".diff"    
+    sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${expected_file2} > ${expected_file2}".diff"   
+    
+    diff ${output_file[0]}".diff" ${expected_file1}".diff" \
         && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of gene-level stringtie quantification mismatch." && exit 1 )
-
-    diff output_file2 expected_file2 \
+    
+    diff ${output_file[1]}".diff" ${expected_file2}".diff" \
         && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of transcript-level stringtie quantification mismatch." && exit 1 )
     """
 }
@@ -114,9 +107,9 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
-    file(params.annotation),
-    file(params.expected_output1),
-    file(params.expected_output2)
+    params.input_file,
+    params.annotation,
+    params.expected_output1,
+    params.expected_output2
   )
 }
