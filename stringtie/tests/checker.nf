@@ -80,7 +80,7 @@ process file_smart_diff {
     
     diff ${output_file[1]}".diff" ${expected_file2}".diff" \
         && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of transcript-level stringtie quantification mismatch." && exit 1 )
-    """
+   """ 
 }
 
 
