@@ -53,7 +53,7 @@ params.annotation = ""
 params.expected_output1 = ""
 params.expected_output2 = ""
 
-include { stringtie } from '../stringtie' params(['cleanup': false, *:params]) 
+include { stringtie } from '../stringtie' 
 
 
 process file_smart_diff {
