@@ -54,7 +54,7 @@ params.input_file = ""
 params.annotation = ""
 params.expected_output = ""
 
-include { salmon} from '../salmon' params(['cleanup': false, *:params]) 
+include {salmon} from '../salmon' params(['cleanup': false, *:params]) 
 
 
 process file_smart_diff {

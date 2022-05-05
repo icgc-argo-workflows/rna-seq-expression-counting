@@ -54,12 +54,12 @@ def main():
 
     parser = argparse.ArgumentParser(description='Tool: salmon')
     #parser.add_argument('--referenceSeq')
-    parser.add_argument('--index')
-    parser.add_argument('--threads')
+    parser.add_argument('--index',required=True)
     parser.add_argument('-r1','--read1', dest='read1',type=str, help='Input file: read1', required=True)
     parser.add_argument('-r2','--read2', dest='read2',type=str, help='Input file: read2', required=True)
     parser.add_argument('-o', '--output-dir', dest='output_dir', type=str,
                         help='Output directory', required=True)
+    parser.add_argument('--threads')
     parser.add_argument('--mem')
     args = parser.parse_args()
 
@@ -68,6 +68,8 @@ def main():
     if not os.path.isfile(args.read2):
         sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.input_file)
 
+    if not os.path.isdir(args.index):
+        sys.exit('Error: index directory of salmon %s does not exist or is not accessible!' % args.index)
     #if not os.path.isdir(args.output_dir):
     #    sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
 

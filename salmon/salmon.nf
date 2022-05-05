@@ -40,23 +40,25 @@ default_container_registry = 'ghcr.io'
 
 // universal params go here
 params.container_registry = ""
-params.container_version = "latest"
+params.container_version = ""
 params.container = ""
 
-params.cpus = ""
-params.mem = "" // GB
+params.cpus = "5"
+params.mem = "8" // GB
 params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.referenceSeq = ""
-params.annotation = ""
+//params.input_file = "NO_FILE_1/NO_FILE_1_{1,2}"
+//params.referenceSeq = "NO_FILE_"
+//params.annotation = "NO_FILE_3"
 //params.outdir = ""
-params.output_pattern = ""  // output file name pattern
+params.input_file="tests/input/sample_01_{1,2}.test.fastq.gz"
+params.annotation="tests/input/test.gtf"
+params.output_pattern = "sample_01.test"  // output file name pattern
 
 
-inp_ch = Channel.fromPath(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
+inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
 
 process salmon {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -66,9 +68,8 @@ process salmon {
   memory "${params.mem} GB"
 
   input:  
-    path reads
-    //path refSeq 
-    path annotation 
+    tuple val(id),path(reads)
+    file annotation 
 
   output: 
     publishDir
@@ -79,20 +80,19 @@ process salmon {
 
     """
     python3 /tools/salmon.py \
-      ##--referenceSeq ${refSeq} \
       --index salmon_index \
-      --threads ${params.cpus} \
       --read1 ${reads[0]} \
       --read2 ${reads[1]} \
       --output-dir out_dir \
+      --threads ${params.cpus} \
       --mem ${params.mem} > ${params.output_pattern}_expression_counting.log 2>&1
    
-   awk 'FS=OFS="\t" {if (\$1!~/#/) print \$9}' $annotation |grep "gene_id"|grep "transcript_id"|awk -F" |; " -vOFS="\t" '{print \$4, \$2}'\
+   awk 'FS=OFS="\t" {if (\$1!~/#/) print \$9}' ${annotation} |grep "gene_id"|grep "transcript_id"|awk -F" |; " -vOFS="\t" '{print \$4, \$2}'\
       > "${annotation}.tx2gene"
    
    cp out_dir/quant.sf ./"${params.output_pattern}.transcripts.salmon"    
   
-   Rscript /tools/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${id}.gene.salmon" 
+   Rscript /tools/tx2gene.R --input out_dir/quant.sf --tx2gene "${annotation}.tx2gene" --tool salmon --output "${params.output_pattern}.gene.salmon" 
    """
 }
 
