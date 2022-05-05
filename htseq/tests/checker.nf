@@ -87,12 +87,14 @@ workflow checker {
   take:
     input_file
     annotation_file
+    output_pattern
     expected_output
 
   main:
     htseq(
       input_file,
       annotation_file
+      output_pattern
     )
 
     file_smart_diff(
@@ -106,6 +108,7 @@ workflow {
   checker(
     params.input_file,
     params.annotation_file,
+    params.output_pattern,
     params.expected_output
   )
 }
