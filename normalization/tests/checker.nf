@@ -85,15 +85,18 @@ process file_smart_diff {
 workflow checker {
   take:
     input_file
+    geneLength
     expected_output
 
   main:
     normalization(
-      input_file
+      input_file,
+      geneLength
     )
 
     file_smart_diff(
       normalization.out.output_file,
+      geneLength,
       expected_output
     )
 }
@@ -102,6 +105,7 @@ workflow checker {
 workflow {
   checker(
     file(params.input_file),
+    file(params.geneLength), 
     file(params.expected_output)
   )
 }

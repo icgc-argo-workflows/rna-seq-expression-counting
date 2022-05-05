@@ -49,10 +49,9 @@ params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will d
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "${baseDir}/tests/input/*.readcounts"
-params.geneLength = "${baseDir}/gene_length_exon_isoform"
-// params.outdir = "${baseDir}/tests/expected/"
-params.output_pattern = "norm"  // output file name pattern
+params.input_file = "NO_FILE"
+params.geneLength = "gene_length_exon_isoform"
+params.output_pattern = ""  // output file name pattern
 
 
 process normalization {
