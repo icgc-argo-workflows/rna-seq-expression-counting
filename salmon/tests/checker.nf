@@ -54,7 +54,7 @@ params.input_file = ""
 params.annotation = ""
 params.expected_output = ""
 
-include { salmon} from '../salmon' params(['cleanup': false, *:params]) 
+include {salmon} from '../salmon' 
 
 
 process file_smart_diff {
@@ -92,9 +92,9 @@ process file_smart_diff {
 workflow checker {
   take:
     inp_ch 
-    path annotation
-    path expected_output1
-    path expected_output2    
+    annotation
+    expected_output1
+    expected_output2    
 
   main:
     salmon(
@@ -110,11 +110,11 @@ workflow checker {
 
 
 workflow {
-  inp_ch = Channel.fromPath(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
+  inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
   checker(
     inp_ch, 
-    params.annotation,
-    params.expected_output1,
-    params.expected_output2
+    file(params.annotation),
+    file(params.expected_output1),
+    file(params.expected_output2)
   )
 }
