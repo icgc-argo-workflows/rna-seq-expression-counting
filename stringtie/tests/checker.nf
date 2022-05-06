@@ -70,9 +70,12 @@ process file_smart_diff {
   script:
     """
     sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${output_file[0]} > ${output_file[0]}".diff" 
+    
     sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${expected_file1}> ${expected_file1}".diff"
     
+
     sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${output_file[1]} > ${output_file[1]}".diff"    
+    
     sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${expected_file2} > ${expected_file2}".diff"   
     
     diff ${output_file[0]}".diff" ${expected_file1}".diff" \
@@ -80,7 +83,7 @@ process file_smart_diff {
     
     diff ${output_file[1]}".diff" ${expected_file2}".diff" \
         && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of transcript-level stringtie quantification mismatch." && exit 1 )
-   """ 
+    """
 }
 
 
