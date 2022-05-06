@@ -32,7 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/expression-counting.htseq'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.htseq'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
