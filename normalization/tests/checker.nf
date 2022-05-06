@@ -96,7 +96,6 @@ workflow checker {
 
     file_smart_diff(
       normalization.out.output_file,
-      geneLength,
       expected_output
     )
 }
