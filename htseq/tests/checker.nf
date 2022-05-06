@@ -98,7 +98,7 @@ workflow {
   checker(
     file(params.input_file),
     file(params.annotation_file),
-    file(params.output_pattern),
+    val(params.output_pattern),
     file(params.expected_output)
   )
 }
