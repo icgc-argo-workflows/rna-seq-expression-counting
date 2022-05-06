@@ -61,7 +61,7 @@ process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    tuple output_file
+    output_file
     path expected_file1
     path expected_file2 
 
