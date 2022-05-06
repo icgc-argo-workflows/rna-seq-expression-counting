@@ -1,7 +1,7 @@
 {
-    "input_file": "input/sample_01.test.bam",
-    "annotation_file":"input/test.gtf",
-    "expected_output":"expected/htseq/sample_01.test.htseq.raw",
+    "input_file": "tests/input/sample_01.test.bam",
+    "annotation_file":"tests/input/test.gtf",
+    "expected_output":"tests/expected/htseq/sample_01.test.htseq.raw",
     "container_registry": "ghcr.io",
     "output_pattern":"sample_01.test.checker",
     "cpus": 1,

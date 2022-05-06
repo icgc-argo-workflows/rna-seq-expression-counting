@@ -96,9 +96,9 @@ workflow checker {
 
 workflow {
   checker(
-    params.input_file,
-    params.annotation_file,
-    params.output_pattern,
-    params.expected_output
+    file(params.input_file),
+    file(params.annotation_file),
+    file(params.output_pattern),
+    file(params.expected_output)
   )
 }
