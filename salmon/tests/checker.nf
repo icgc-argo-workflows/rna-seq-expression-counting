@@ -61,7 +61,7 @@ process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    output_file
+    tuple path(output_file1),path(output_file2)
     path expected_file1
     path expected_file2 
 
@@ -80,10 +80,10 @@ process file_smart_diff {
     #([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
     #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
 
-    diff ${output_file[0]} expected_file1 \
+    diff output_file1 expected_file1 \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
    
-   diff ${output_file[1]} expected_file2 \
+   diff output_file2 expected_file2 \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 ) 
    """
 }
