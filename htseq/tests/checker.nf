@@ -67,7 +67,7 @@ process file_smart_diff {
 
   script:
     """
-    diff output_file expected_file \
+    diff ${output_file} ${expected_file} \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -98,7 +98,7 @@ workflow {
   checker(
     file(params.input_file),
     file(params.annotation_file),
-    val(params.output_pattern),
+    params.output_pattern,
     file(params.expected_output)
   )
 }
