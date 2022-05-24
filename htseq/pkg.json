@@ -1,5 +1,5 @@
 {
-    "name": "htseq",
+    "name": "ak_htseq",
     "version": "0.1.0",
     "description": "expression counting tool:htseq",
     "main": "htseq.nf",
