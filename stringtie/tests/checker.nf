@@ -55,7 +55,6 @@ params.expected_output2 = ""
 
 include { stringtie } from '../stringtie' params(['cleanup': false, *:params]) 
 
-
 process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
@@ -69,12 +68,12 @@ process file_smart_diff {
 
   script:
     """
-    sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${output_file[0]} > ${output_file[0]}".diff" 
-    sed -e "s\/gene_id,.*$\/gene_id,readCounts\/g" ${expected_file1}> ${expected_file1}".diff"
+    sed -e "s/gene_id,.*\$/gene_id,readCounts/g" ${output_file[0]} > ${output_file[0]}".diff" 
+    sed -e "s/gene_id,.*\$/gene_id,readCounts/g" ${expected_file1}> ${expected_file1}".diff"
     
-    sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${output_file[1]} > ${output_file[1]}".diff"    
-    sed -e "s\/transcript_id,.*$\/transcript_id,readCounts\/g" ${expected_file2} > ${expected_file2}".diff"   
-    
+    sed -e "s/transcript_id,.*\$/transcript_id,readCounts/g" ${output_file[1]} > ${output_file[1]}".diff"    
+    sed -e "s/transcript_id,.*\$/transcript_id,readCounts/g" ${expected_file2} > ${expected_file2}".diff"   
+
     diff ${output_file[0]}".diff" ${expected_file1}".diff" \
         && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file of gene-level stringtie quantification mismatch." && exit 1 )
     
@@ -107,9 +106,9 @@ workflow checker {
 
 workflow {
   checker(
-    params.input_file,
-    params.annotation,
-    params.expected_output1,
-    params.expected_output2
+    file(params.input_file),
+    file(params.annotation),
+    file(params.expected_output1),
+    file(params.expected_output2)
   )
 }
