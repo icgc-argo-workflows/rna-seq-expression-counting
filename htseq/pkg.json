@@ -1,6 +1,6 @@
 {
-    "name": "ak_htseq",
-    "version": "0.1.0",
+    "name": "htseq",
+    "version": "0.1.0-ak",
     "description": "expression counting tool:htseq",
     "main": "htseq.nf",
     "deprecated": false,
