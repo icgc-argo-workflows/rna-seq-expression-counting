@@ -54,6 +54,7 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 //params.annotation = "NO_FILE_3"
 //params.outdir = ""
 params.input_file="tests/input/sample_01_{1,2}.test.fastq.gz"
+params.referenceSeq = "tests/input/gencode.v37.transcripts.fa"
 params.annotation="tests/input/test.gtf"
 params.output_pattern = "sample_01.test"  // output file name pattern
 
@@ -69,7 +70,8 @@ process salmon {
 
   input:  
     tuple val(id),path(reads)
-    file annotation 
+    path referenceSeq
+    path annotation 
 
   output: 
     publishDir
@@ -80,6 +82,7 @@ process salmon {
 
     """
     python3 /tools/salmon.py \
+      --referenceSeq ${referenceSeq} \
       --index salmon_index \
       --read1 ${reads[0]} \
       --read2 ${reads[1]} \
@@ -99,6 +102,6 @@ process salmon {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  //salmon(inp_ch, params.referenceSeq, params.annotation)
-  salmon(inp_ch, params.annotation)
+  salmon(inp_ch, file(params.referenceSeq), file(params.annotation))
+  //salmon(inp_ch, params.annotation)
 }

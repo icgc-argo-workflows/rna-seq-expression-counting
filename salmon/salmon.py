@@ -53,7 +53,7 @@ def main():
     """
 
     parser = argparse.ArgumentParser(description='Tool: salmon')
-    #parser.add_argument('--referenceSeq')
+    parser.add_argument('--referenceSeq',required=True)
     parser.add_argument('--index',required=True)
     parser.add_argument('-r1','--read1', dest='read1',type=str, help='Input file: read1', required=True)
     parser.add_argument('-r2','--read2', dest='read2',type=str, help='Input file: read2', required=True)
@@ -68,14 +68,14 @@ def main():
     if not os.path.isfile(args.read2):
         sys.exit('Error: specified input file %s does not exist or is not accessible!' % args.input_file)
 
-    if not os.path.isdir(args.index):
-        sys.exit('Error: index directory of salmon %s does not exist or is not accessible!' % args.index)
+    #if not os.path.isdir(args.index):
+    #    sys.exit('Error: index directory of salmon %s does not exist or is not accessible!' % args.index)
     #if not os.path.isdir(args.output_dir):
     #    sys.exit('Error: specified output dir %s does not exist or is not accessible!' % args.output_dir)
 
     subprocess.run("mkdir -p {}".format(args.output_dir), check=True, shell=True)
     
-    #salmon_index(args.referenceSeq, args.index)
+    salmon_index(args.referenceSeq, args.index)
 
     salmon_quant(args.index, "A", args.read1, args.read2, args.output_dir)
 
