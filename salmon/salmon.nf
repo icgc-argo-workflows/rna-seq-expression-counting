@@ -32,7 +32,8 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.salmon'
+    //'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.salmon'
+    'ghcr.io':'salmon'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -45,7 +46,7 @@ params.container = ""
 
 params.cpus = "5"
 params.mem = "8" // GB
-params.publish_dir = ""  // set to empty string will disable publishDir
+params.publish_dir = "tests/expected/salmon/"  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
@@ -54,7 +55,7 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 //params.annotation = "NO_FILE_3"
 //params.outdir = ""
 params.input_file="tests/input/sample_01_{1,2}.test.fastq.gz"
-params.referenceSeq = "tests/input/gencode.v37.transcripts.fa"
+params.referenceSeq = "tests/input/test.transcripts.fa"
 params.annotation="tests/input/test.gtf"
 params.output_pattern = "sample_01.test"  // output file name pattern
 
@@ -83,7 +84,6 @@ process salmon {
     """
     python3 /tools/salmon.py \
       --referenceSeq ${referenceSeq} \
-      --index salmon_index \
       --read1 ${reads[0]} \
       --read2 ${reads[1]} \
       --output-dir out_dir \
