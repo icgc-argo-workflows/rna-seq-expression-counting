@@ -32,8 +32,7 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    //'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.salmon'
-    'ghcr.io':'salmon'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.salmon'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -46,7 +45,7 @@ params.container = ""
 
 params.cpus = "5"
 params.mem = "8" // GB
-params.publish_dir = "tests/expected/salmon/"  // set to empty string will disable publishDir
+params.publish_dir = "tests/expected/"  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
