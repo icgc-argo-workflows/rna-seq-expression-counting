@@ -72,7 +72,7 @@ def main():
     if not os.path.isfile(args.geneLength):
         sys.exit('Error: specified geneLength file %s does not exist or is not accessible!' % args.geneLength)
 
-    df_inp = pd.read_csv(args.input,sep='\t').dropna()
+    df_inp = pd.read_csv(args.input,sep='\t',header=0).dropna()
     
     df_length = pd.read_csv(args.geneLength,sep='\t')
     dict_length = dict(zip(df_length['gene'],df_length['merged']))

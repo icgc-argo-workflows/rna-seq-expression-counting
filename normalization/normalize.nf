@@ -45,12 +45,12 @@ params.container = ""
 
 params.cpus = 1
 params.mem = 1  // GB
-params.publish_dir = "${baseDir}/tests/expected/"  // set to empty string will disable publishDir
+params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = "NO_FILE"
-params.geneLength = "gene_length_exon_isoform"
+params.input_file = ""
+params.geneLength = ""
 params.output_pattern = ""  // output file name pattern
 
 
@@ -67,16 +67,16 @@ process normalization {
 
   output:  // output, make update as needed
     publishDir
-    file("${input_file}.${params.output_pattern}")
+    file("${params.output_pattern}.norm")
 
   script:
     // add and initialize variables here as needed
 
     """
-    python3 ${baseDir}/normalize.py \
+    python3 /tools/normalize.py \
       -i ${input_file} \
       -geneLength ${geneLength} \
-      -o "${input_file}.${params.output_pattern}"
+      -o ${params.output_pattern}".norm"
 
     """
 }
