@@ -45,7 +45,7 @@ params.container = ""
 
 params.cpus = "5"
 params.mem = "8" // GB
-params.publish_dir = "tests/expected/"  // set to empty string will disable publishDir
+params.publish_dir = ""// set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
