@@ -59,15 +59,15 @@ process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
   input:
-    file output_file
-    file expected_file
+    path output_file
+    path expected_file
 
   output:
     stdout()
 
   script:
     """
-    diff output_file expected_file \
+    diff ${output_file} ${expected_file} \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -77,14 +77,12 @@ workflow checker {
   take:
     input_file
     annotation_file
-    output_pattern
     expected_output
 
   main:
     htseq(
       input_file,
       annotation_file,
-      output_pattern
     )
 
     file_smart_diff(
@@ -98,7 +96,6 @@ workflow {
   checker(
     file(params.input_file),
     file(params.annotation_file),
-    val(params.output_pattern),
     file(params.expected_output)
   )
 }

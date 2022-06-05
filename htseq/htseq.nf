@@ -67,7 +67,6 @@ process htseq {
   input:  // input, make update as needed
     path bam
     path annotation
-    val output_pattern
 
   output:  // output, make update as needed
     file("${params.output_pattern}.htseq.raw")
@@ -81,7 +80,7 @@ process htseq {
     python3 /tools/htseq.py \
       -a $annotation \
       -bam $bam \
-      -o $output_pattern 
+      -o ${params.output_pattern}
 
     head -n -5 "${params.output_pattern}.htseq.tmp" | tail -n +3 > "${params.output_pattern}.htseq.raw"            
     """
@@ -91,5 +90,5 @@ process htseq {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  htseq(file(params.input_file), file(params.annotation), params.output_pattern)
+  htseq(file(params.input_file), file(params.annotation))
 }
