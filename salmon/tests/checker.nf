@@ -50,7 +50,7 @@ params.container = ""
 // tool specific parmas go here, add / change as needed
 params.input_file = ""
 //params.index = "salmon_index"
-//params.referenceSeq = ""
+params.referenceSeq = ""
 params.annotation = ""
 params.expected_output = ""
 
@@ -73,17 +73,20 @@ process file_smart_diff {
     # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
     # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
     # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
+    for f in ${output_file1} ${expected_file1} 
+        do     
+        awk 'NR==1 {print};NR>1 {printf("%s %d %d\\n", \$1, int(\$2/10)*10, int(\$3/10)*10 )}' \$f > \$f".round" 
+    done            
 
-    #cat ${output_file[0]} \
-    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
-
-    #([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-    #  | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
-
-    diff output_file1 expected_file1 \
+   for f in ${output_file2} ${expected_file2}
+        do 
+        awk 'NR==1 {print};NR>1 {printf("%s %d %d %d %d\\n", \$1, int(\$2/10)*10, int(\$3/10)*10, int(\$3/10)*10, int(\$3/10)*10 )}' \$f > \$f".round"
+   done     
+     
+   diff ${output_file1}.round ${expected_file1}.round \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
    
-   diff output_file2 expected_file2 \
+   diff ${output_file2}.round ${expected_file2}.round \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 ) 
    """
 }
@@ -93,12 +96,14 @@ workflow checker {
   take:
     inp_ch 
     annotation
+    referenceSeq
     expected_output1
     expected_output2    
 
   main:
     salmon(
       inp_ch,
+      referenceSeq,
       annotation 
     )
     file_smart_diff(
@@ -114,6 +119,7 @@ workflow {
   checker(
     inp_ch, 
     file(params.annotation),
+    file(params.referenceSeq),
     file(params.expected_output1),
     file(params.expected_output2)
   )
