@@ -6,5 +6,5 @@
     "expected_output2": "expected/salmon/sample_01.test.transcripts.salmon",
     "output_pattern": "sample_01.test.checker",
     "cpus": 1,
-    "mem": 8
+    "mem": 6
 }

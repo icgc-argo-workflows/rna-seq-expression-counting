@@ -44,7 +44,7 @@ params.container_version = ""
 params.container = ""
 
 params.cpus = "5"
-params.mem = "8" // GB
+params.mem = "6" // GB
 params.publish_dir = ""// set to empty string will disable publishDir
 
 
