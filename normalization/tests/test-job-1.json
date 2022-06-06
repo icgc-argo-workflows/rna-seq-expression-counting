@@ -2,7 +2,7 @@
     "input_file": "input/sample_01.test.readcounts",
     "geneLength": "input/gene_length_exon_isoform",
     "expected_output": "expected/normalization/sample_01.test.readCounts.norm",
-    "ouput_pattern":"sample_01_test.checker",
+    "output_pattern":"sample_01_test.checker",
     "cpus": 1,
     "mem": 0.5
 }
