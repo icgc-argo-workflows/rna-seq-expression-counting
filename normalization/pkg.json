@@ -2,7 +2,7 @@
     "name": "normalization",
     "version": "0.1.0",
     "description": "RNA seq normalization tools",
-    "main": "main.nf",
+    "main": "normalize.nf",
     "deprecated": false,
     "keywords": [
         "'bioinformatics'",
