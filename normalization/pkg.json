@@ -11,7 +11,7 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/icgc-argo-workflows/expression-counting.git"
+        "url": "https://github.com/icgc-argo-workflows/rna-seq-expression-counting.git"
     },
     "container": {
         "registries": [
@@ -32,6 +32,6 @@
         }
     ],
     "license": "MIT",
-    "bugReport": "https://github.com/icgc-argo-workflows/expression-counting/issues",
-    "homepage": "https://github.com/icgc-argo-workflows/expression-counting#readme"
+    "bugReport": "https://github.com/icgc-argo-workflows/rna-seq-expression-counting/issues",
+    "homepage": "https://github.com/icgc-argo-workflows/rna-seq-expression-counting#readme"
 }
