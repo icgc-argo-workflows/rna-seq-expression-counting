@@ -55,10 +55,9 @@ params.expected_output2 = ""
 
 include { stringtie } from '../stringtie'
 
+process file_smart_diff {
+  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
 
-process file_smart_diff { 
-  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}" 
-  
   input:
     tuple path(output_file1),path(output_file2)
     path expected_file1

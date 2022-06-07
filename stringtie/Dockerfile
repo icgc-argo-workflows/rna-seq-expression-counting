@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL org.opencontainers.image.source https://github.com/icgc-argo-workflows/expression-counting
+LABEL org.opencontainers.image.source https://github.com/icgc-argo-workflows/rna-seq-expression-counting
 
 ENV TZ=Asia/Seoul
 ENV DEBCONF_NOWARNINGS yes
