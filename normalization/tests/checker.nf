@@ -93,8 +93,8 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
-    file(params.geneLength), 
-    file(params.expected_output)
+    path(params.input_file),
+    path(params.geneLength), 
+    path(params.expected_output)
   )
 }
