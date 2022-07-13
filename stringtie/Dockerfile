@@ -8,8 +8,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir tools
 
-RUN apt-get update && apt-get install -y tzdata build-essential wget python2.7 python-pip python3.7 python3-pip tar cmake 
-RUN pip install pandas 
+RUN apt-get update && apt-get install -y tzdata build-essential wget python-pip python3.7 python3-pip tar cmake 
 RUN pip3 install pandas
 RUN pip3 install argparse
 
