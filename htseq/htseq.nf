@@ -32,7 +32,8 @@ nextflow.enable.dsl = 2
 version = '0.1.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.htseq'
+    //'ghcr.io': 'ghcr.io/icgc-argo-workflows/rna-seq-expression-counting.htseq'
+    'ghcr.io': "htseq_new"
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -90,5 +91,5 @@ process htseq {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  htseq(file(params.input_file), file(params.annotation))
+  htseq(file(params.input_file), file(params.annotation_file))
 }
