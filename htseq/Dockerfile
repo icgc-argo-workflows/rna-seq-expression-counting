@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 RUN apt-get update && apt-get install -y software-properties-common 
 RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.7 python3-pip 
+RUN apt install python3.7
 RUN python3.7 -m pip install pip
 RUN apt-get install -y tzdata build-essential wget tar cmake
 RUN apt-get install -y build-essential python3-numpy python3-matplotlib 
