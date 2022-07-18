@@ -13,9 +13,10 @@ RUN pip3 install pandas && \
 
 RUN echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/" >> /etc/apt/sources.list
 RUN wget -qO- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc | tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 RUN apt-get update 
-RUN apt-get install -y r-base 
-RUN Rscript -e "if (!require('BiocManager', quietly = TRUE)) install.packages('BiocManager');BiocManager::install('tximport')"
+RUN apt-get install -y r-base=4.2.0-1.1804.0
+RUN Rscript -e "if (!require('BiocManager', quietly = TRUE)) install.packages('BiocManager',version="3.15");BiocManager::install('tximport')"
 RUN Rscript -e "install.packages('argparse')"
 
 
