@@ -82,7 +82,7 @@ process htseq {
       -bam $bam \
       -o ${params.output_pattern}
 
-    head -n -5 "${params.output_pattern}.htseq.tmp" | tail -n +3 > "${params.output_pattern}.htseq.raw"            
+    head -n -5 "${params.output_pattern}.htseq.tmp" > "${params.output_pattern}.htseq.raw"            
     """
 }
 
