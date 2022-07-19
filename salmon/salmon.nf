@@ -49,14 +49,10 @@ params.publish_dir = ""// set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-//params.input_file = "NO_FILE_1/NO_FILE_1_{1,2}"
-//params.referenceSeq = "NO_FILE_"
-//params.annotation = "NO_FILE_3"
-//params.outdir = ""
-params.input_file="tests/input/sample_01_{1,2}.test.fastq.gz"
-params.referenceSeq = "tests/input/test.transcripts.fa"
-params.annotation="tests/input/test.gtf"
-params.output_pattern = "sample_01.test"  // output file name pattern
+params.input_file="NO_FILE_1/NO_FILE_1_{1,2}"
+params.referenceSeq = "NO_FILE_"
+params.annotation_file="NO_FILE_3"
+params.output_pattern = ""  // output file name pattern
 
 
 inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
@@ -101,6 +97,5 @@ process salmon {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  salmon(inp_ch, file(params.referenceSeq), file(params.annotation))
-  //salmon(inp_ch, params.annotation)
+  salmon(inp_ch, file(params.referenceSeq), file(params.annotation_file))
 }
