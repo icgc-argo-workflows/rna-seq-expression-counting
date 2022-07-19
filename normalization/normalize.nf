@@ -86,7 +86,7 @@ process normalization {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   normalization(
-    params.input_file,
-    params.geneLength
+    file(params.input_file),
+    file(params.geneLength)
   )
 }
