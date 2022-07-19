@@ -51,7 +51,7 @@ params.container = ""
 params.input_file = ""
 //params.index = "salmon_index"
 params.referenceSeq = ""
-params.annotation = ""
+params.annotation_file = ""
 params.expected_output = ""
 
 include {salmon} from '../salmon' 
@@ -118,7 +118,7 @@ workflow {
   inp_ch = Channel.fromFilePairs(params.input_file).ifEmpty{exit 1,"Fastq sequence not found: ${params.input_file}"}
   checker(
     inp_ch, 
-    file(params.annotation),
+    file(params.annotation_file),
     file(params.referenceSeq),
     file(params.expected_output1),
     file(params.expected_output2)

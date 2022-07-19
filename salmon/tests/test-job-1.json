@@ -1,7 +1,7 @@
 {
     "input_file": "input/sample_01_{1,2}.test.fastq.gz",
     "referenceSeq": "input/test.transcripts.fa",
-    "annotation": "input/test.gtf", 
+    "annotation_file": "input/test.gtf", 
     "expected_output1": "expected/salmon/sample_01.test.gene.salmon",
     "expected_output2": "expected/salmon/sample_01.test.transcripts.salmon",
     "output_pattern": "sample_01.test.checker",
