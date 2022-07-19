@@ -48,7 +48,7 @@ params.mem = 1  // GB
 params.publish_dir = ""  // set to empty string will disable publishDir
 
 
-// tool specific parmas go here, add / change as needed
+// tool specific params go here, add / change as needed
 params.input_file = ""
 params.annotation = ""
 //params.outdir = ""
@@ -88,5 +88,5 @@ process stringtie {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-    stringtie(parmas.input_file, params.annotation)
+    stringtie(file(params.input_file), file(params.annotation_file))
 }
