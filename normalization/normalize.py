@@ -80,12 +80,18 @@ def main():
     df_readCounts = df_inp.loc[:,['gene','readCounts']].set_index('gene')
 
     # FPKM
-    df_FPKM = df_readCounts.apply(lambda x:x/sum(x)).apply(lambda x:x/df_readCounts.index.map(dict_length)).applymap(lambda x:x*10**9).dropna().rename(columns = {"readCounts":'FPKM'})
-    df_FPKM_UQ = upper_quartile_normalize(df_FPKM)
+    df_FPKM = df_readCounts.apply(lambda x:x/sum(x)).apply(lambda x:x/df_readCounts.index.map(dict_length)).applymap(lambda x:x*10**9).rename(columns = {"readCounts":'FPKM'})
+    if df_FPKM.isna().sum()[0]/df_FPKM.shape[0] > 0.9:
+        raise Warning("over 90% of FPKM values are NaN")
+    else:
+        df_FPKM_UQ = upper_quartile_normalize(df_FPKM)
     
    # TPM
-    df_TPM = df_readCounts.apply(lambda x:x/df_readCounts.index.map(dict_length)).dropna().apply(lambda x:x/sum(x)).applymap(lambda x:x*10**6).rename(columns = {"readCounts":'TPM'})
-    df_TPM_UQ = upper_quartile_normalize(df_TPM)
+    df_TPM = df_readCounts.apply(lambda x:x/df_readCounts.index.map(dict_length)).apply(lambda x:x/sum(x)).applymap(lambda x:x*10**6).rename(columns = {"readCounts":'TPM'})
+    if df_TPM.isna().sum()[0]/df_TPM.shape[0] > 0.9:
+        raise Warning("over 90% of TPM values are NaN")
+    else:
+        df_TPM_UQ = upper_quartile_normalize(df_TPM)
 
     df_readCounts.join(df_FPKM).join(df_FPKM_UQ,rsuffix="_UQ").join(df_TPM).join(df_TPM_UQ,rsuffix="_UQ").reset_index().to_csv(args.output,sep='\t',index=False,header=True) 
     
